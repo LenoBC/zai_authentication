@@ -8,6 +8,16 @@ const store = createStore({
     users: UsersModule,
     auth: authModule,
   },
+  state() {
+    return {
+      host: "http://localhost:8338",
+    };
+  },
+  getters: {
+    host(state) {
+      return state.host;
+    },
+  },
 });
 
 export default store;

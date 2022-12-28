@@ -3,6 +3,8 @@
     <v-app-bar>
       <v-spacer></v-spacer>
 
+      <v-btn v-if="isAuthenticated" @click="logout">Wyloguj</v-btn>
+
       <v-btn
         :prepend-icon="isDark == 0 ? 'mdi-weather-sunny' : 'mdi-weather-night'"
         @click="toggleTheme"
@@ -27,12 +29,34 @@ export default {
       isDark: true,
     };
   },
+  created() {
+    this.$store.dispatch("tryLogin");
+  },
   methods: {
     toggleTheme() {
       this.isDark = !this.isDark;
       this.isDark == 1
         ? (this.$vuetify.theme.global.name = "dark")
         : (this.$vuetify.theme.global.name = "light");
+    },
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.replace("/login");
+    },
+  },
+  computed: {
+    didAutoLogout() {
+      return this.$store.getters.didAutoLogout;
+    },
+    isAuthenticated() {
+      return this.$store.getters["isAuthenticated"];
+    },
+  },
+  watch: {
+    didAutoLogout(curValue, oldValue) {
+      if (curValue && curValue !== oldValue) {
+        this.$router.replace("/login");
+      }
     },
   },
 };

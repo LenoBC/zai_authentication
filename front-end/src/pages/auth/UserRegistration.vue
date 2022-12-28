@@ -135,6 +135,8 @@ export default {
           phone: this.formData.phone,
         };
 
+        
+
         console.log("registerData", registerData);
       }
     },

@@ -4,7 +4,12 @@ import getters from "./getters.js";
 
 export default {
   state() {
-    return {};
+    return {
+      userId: null,
+      token: null,
+      role: null,
+      didAutoLogout: false,
+    };
   },
   mutations,
   actions,

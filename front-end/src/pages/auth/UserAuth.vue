@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
+        <v-alert closable type="error" v-if="error" title="Błąd logowania" :text="error" @click="handleError"></v-alert>
         <v-card>
           <v-card-title class="headline">Logowanie</v-card-title>
           <v-card-text>
@@ -46,7 +47,7 @@ export default {
       valid: false,
       email: "",
       password: "",
-      error: "",
+      error: null,
       emailRules: [
         (v) => !!v || "Adres email jest wymagany",
         (v) => /.+@.+/.test(v) || "Nieprawidłowy adres email",
@@ -55,15 +56,25 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.$refs.loginForm.validate()) {
         const loginData = {
           email: this.email,
           password: this.password,
         };
 
-        console.log("registerData", loginData);
+        try {
+          await this.$store.dispatch("login", loginData);
+          const redirectUrl = '/users';
+          this.$router.replace(redirectUrl);
+
+        } catch (error) {
+          this.error = "Logowanie nie powiodło się spróbuj później";
+        }
       }
+    },
+    handleError() {
+      this.error = null;
     },
   },
 };
