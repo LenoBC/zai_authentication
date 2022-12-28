@@ -3,7 +3,9 @@
     <v-app-bar>
       <v-spacer></v-spacer>
 
-      <v-btn v-if="isAuthenticated" @click="logout">Wyloguj</v-btn>
+      <template v-if="isAuthenticated">
+        <avatar-menu> </avatar-menu>
+      </template>
 
       <v-btn
         :prepend-icon="isDark == 0 ? 'mdi-weather-sunny' : 'mdi-weather-night'"
@@ -21,9 +23,11 @@
 </template>
 
 <script>
+import AvatarMenu from "./components/auth/AvatarMenu.vue";
+
 export default {
   name: "App",
-  components: {},
+  components: { AvatarMenu },
   data() {
     return {
       isDark: true,
@@ -38,10 +42,6 @@ export default {
       this.isDark == 1
         ? (this.$vuetify.theme.global.name = "dark")
         : (this.$vuetify.theme.global.name = "light");
-    },
-    logout() {
-      this.$store.dispatch("logout");
-      this.$router.replace("/login");
     },
   },
   computed: {
