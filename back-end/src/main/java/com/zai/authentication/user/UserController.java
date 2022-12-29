@@ -1,6 +1,9 @@
 package com.zai.authentication.user;
+import com.zai.authentication.auth.PasswordUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,11 +14,13 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordUtils passwordUtils;
 
-//    @GetMapping
+    public UserController(UserRepository userRepository, PasswordUtils passwordUtils) {
+        this.userRepository = userRepository;
+        this.passwordUtils = passwordUtils;
+    }
+    //    @GetMapping
 //    public List<User> getAllUsers() {
 //        return userRepository.findAll();
 //    }
@@ -37,12 +42,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO request) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser == null) {
             return null;
         }
-        return userRepository.save(existingUser);
+
+        if (request.getPassword() != null && !passwordUtils.verifyPassword(request.getCurrentPassword(), existingUser.getPassword())) {
+            return new ResponseEntity<>("Current password is incorrect", HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getPassword() != null) {
+            existingUser.setPassword(passwordUtils.encryptPassword(request.getPassword()));
+        }
+        existingUser.setDateOfBirth(request.getDateOfBirth());
+        existingUser.setPhoneNumber(request.getPhoneNumber());
+        existingUser.setFirstName(request.getFirstName());
+        existingUser.setLastName(request.getLastName());
+        existingUser.setEmail(request.getEmail());
+
+        userRepository.save(existingUser);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

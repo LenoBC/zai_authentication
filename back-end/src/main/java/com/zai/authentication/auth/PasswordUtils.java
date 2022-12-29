@@ -20,4 +20,11 @@ public class PasswordUtils {
         }
         return passwordEncoder.encode(password);
     }
+
+    public boolean verifyPassword(String password, String hash) {
+        if(isBlank(password)){
+            throw new IllegalArgumentException("Password cannot be blank");
+        }
+        return passwordEncoder.matches(password, hash);
+    }
 }
