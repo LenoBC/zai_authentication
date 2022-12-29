@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import UserAuth from "./pages/auth/UserAuth.vue";
 import UserRegistration from "./pages/auth/UserRegistration.vue";
-import UsersList from "./pages/users/UsersList.vue"
+import UsersList from "./pages/users/UsersList.vue";
+import UserEdit from "./pages/users/UserEdit.vue";
 import NotFound from "./pages/NotFound.vue";
 //import store from "./store/index.js";
 
@@ -21,6 +22,10 @@ const router = createRouter({
     {
       path: "/users",
       component: UsersList,
+    },
+    {
+      path: "/users/edit-account",
+      component: UserEdit,
     },
     { path: "/:notFound(.*)", component: NotFound },
   ],

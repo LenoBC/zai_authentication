@@ -132,7 +132,7 @@ export default {
           email: this.formData.email,
           password: this.formData.password,
           birthday: this.formData.birthday,
-          phone: this.formData.phone,
+          phoneNumber: this.formData.phone,
         };
 
         

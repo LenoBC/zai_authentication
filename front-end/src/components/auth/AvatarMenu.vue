@@ -19,7 +19,9 @@
               <h3>{{ getRole }}</h3>
 
               <v-divider class="my-3"></v-divider>
-              <v-btn rounded variant="text"> Edytuj konto </v-btn>
+              <v-btn rounded variant="text" @click="editUser">
+                Edytuj konto
+              </v-btn>
               <v-divider class="my-3"></v-divider>
               <v-btn rounded variant="text" @click="logout"> Wyloguj </v-btn>
             </div>
@@ -41,6 +43,9 @@ export default {
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace("/login");
+    },
+    editUser() {
+      this.$router.push("/users/edit-account");
     },
   },
   computed: {
