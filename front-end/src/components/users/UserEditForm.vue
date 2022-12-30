@@ -278,8 +278,8 @@ export default {
           ) ||
           "Hasło musi zawierać co najmniej jedną małą literę, jedną wielką literę i jedną cyfrę",
         (v) =>
-          v === this.formData.currentPassword ||
-          "Nowe hasło jest takie samo jak obecne",
+          v !== this.formData.currentPassword ||
+          "Hasło nie może być takie samo jak obecne",
       ],
       passwordCheckRules: [
         (v) => !!v || "Powtórzenie hasła jest wymagane",
