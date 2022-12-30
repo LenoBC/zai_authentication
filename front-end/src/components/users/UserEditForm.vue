@@ -1,97 +1,220 @@
 <template>
   <v-container fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card>
-          <v-card-title class="headline">Aktualizacja Danych</v-card-title>
-          <v-card-text>
-            <v-form ref="form">
-              <v-text-field
-                v-model.trim="formData.firstName"
-                :rules="nameRules"
-                label="Imię"
-                type="text"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="formData.lastName"
-                :rules="nameRules"
-                label="Nazwisko"
-                type="text"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="formData.email"
-                :rules="emailRules"
-                label="Adres email"
-                type="email"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="formData.birthday"
-                :rules="birthdayRules"
-                label="Data urodzenia"
-                type="date"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="formData.phone"
-                :rules="phoneRules"
-                label="Numer telefonu"
-                required
-              ></v-text-field>
+    <template v-if="!this.editToggle">
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card>
+            <v-card-title class="headline">Aktualizacja Danych</v-card-title>
+            <v-card-text>
+              <v-form ref="form">
+                <v-text-field
+                  v-model.trim="formData.firstName"
+                  :rules="nameRules"
+                  label="Imię"
+                  type="text"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model.trim="formData.lastName"
+                  :rules="nameRules"
+                  label="Nazwisko"
+                  type="text"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model.trim="formData.email"
+                  :rules="emailRules"
+                  label="Adres email"
+                  type="email"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model.trim="formData.birthday"
+                  :rules="birthdayRules"
+                  label="Data urodzenia"
+                  type="date"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model.trim="formData.phone"
+                  :rules="phoneRules"
+                  label="Numer telefonu"
+                  required
+                ></v-text-field>
 
-              <div align="left" justify="left" style="display: flex">
-                <v-card-text>Zmień hasło</v-card-text>
+                <div v-if="!this.editToggle">
+                  <div align="left" justify="left" style="display: flex">
+                    <v-card-text>Zmień hasło</v-card-text>
+                    <v-btn
+                      class="position-relative mr-40"
+                      variant="outlined"
+                      size="small"
+                      icon
+                      color="info"
+                      @click="togglePassword"
+                    >
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </div>
+
+                  <div v-if="changePwd">
+                    <v-text-field
+                      v-model.trim="formData.currentPassword"
+                      label="Podaj obecne hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                    <v-text-field
+                      v-model.trim="formData.password"
+                      :rules="passwordRules"
+                      label="Podaj nowe hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                    <v-text-field
+                      v-model.trim="formData.passwordChek"
+                      :rules="passwordCheckRules"
+                      label="Powtórz nowe hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </div>
+                </div>
+                <v-btn @click="submitForm">Zaktualizuj dane</v-btn>
                 <v-btn
-                  class="position-relative mr-40"
-                  variant="outlined"
-                  size="small"
-                  icon
-                  color="info"
-                  @click="togglePassword"
+                  v-if="!this.editToggle"
+                  class="bg-blue ml-3"
+                  @click="cancelUpdate"
+                  >Anuluj</v-btn
                 >
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </div>
+                <v-btn
+                  v-else-if="this.editToggle"
+                  class="bg-blue ml-3"
+                  @click="this.editToggle"
+                  >Anuluj</v-btn
+                >
+                <v-alert
+                  closable
+                  type="error"
+                  v-if="error"
+                  title="Błąd"
+                  :text="error"
+                  @click="handleError"
+                ></v-alert>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
 
-              <div v-if="changePwd">
+    <template v-else-if="this.editToggle">
+      <v-row align="center" justify="center">
+        <v-col>
+          <v-card>
+            <v-card-title class="headline">Aktualizacja Danych</v-card-title>
+            <v-card-text>
+              <v-form ref="form">
                 <v-text-field
-                  v-model.trim="formData.currentPassword"
-                  label="Podaj obecne hasło"
-                  type="password"
+                  v-model.trim="formData.firstName"
+                  :rules="nameRules"
+                  label="Imię"
+                  type="text"
                   required
                 ></v-text-field>
                 <v-text-field
-                  v-model.trim="formData.password"
-                  :rules="passwordRules"
-                  label="Podaj nowe hasło"
-                  type="password"
+                  v-model.trim="formData.lastName"
+                  :rules="nameRules"
+                  label="Nazwisko"
+                  type="text"
                   required
                 ></v-text-field>
                 <v-text-field
-                  v-model.trim="formData.passwordChek"
-                  :rules="passwordCheckRules"
-                  label="Powtórz nowe hasło"
-                  type="password"
+                  v-model.trim="formData.email"
+                  :rules="emailRules"
+                  label="Adres email"
+                  type="email"
                   required
                 ></v-text-field>
-              </div>
-              <v-btn @click="submitForm">Zaktualizuj dane</v-btn>
-              <v-btn class="bg-blue ml-3" @click="cancelUpdate">Anuluj</v-btn>
-              <v-alert
-                closable
-                type="error"
-                v-if="error"
-                title="Błąd"
-                :text="error"
-                @click="handleError"
-              ></v-alert>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+                <v-text-field
+                  v-model.trim="formData.birthday"
+                  :rules="birthdayRules"
+                  label="Data urodzenia"
+                  type="date"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model.trim="formData.phone"
+                  :rules="phoneRules"
+                  label="Numer telefonu"
+                  required
+                ></v-text-field>
+
+                <div v-if="!this.editToggle">
+                  <div align="left" justify="left" style="display: flex">
+                    <v-card-text>Zmień hasło</v-card-text>
+                    <v-btn
+                      class="position-relative mr-40"
+                      variant="outlined"
+                      size="small"
+                      icon
+                      color="info"
+                      @click="togglePassword"
+                    >
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </div>
+
+                  <div v-if="changePwd">
+                    <v-text-field
+                      v-model.trim="formData.currentPassword"
+                      label="Podaj obecne hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                    <v-text-field
+                      v-model.trim="formData.password"
+                      :rules="passwordRules"
+                      label="Podaj nowe hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                    <v-text-field
+                      v-model.trim="formData.passwordChek"
+                      :rules="passwordCheckRules"
+                      label="Powtórz nowe hasło"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </div>
+                </div>
+                <v-btn @click="submitForm">Zaktualizuj dane</v-btn>
+                <v-btn
+                  v-if="!this.editToggle"
+                  class="bg-blue ml-3"
+                  @click="cancelUpdate"
+                  >Anuluj</v-btn
+                >
+                <v-btn
+                  v-else-if="this.editToggle"
+                  class="bg-blue ml-3"
+                  @click="this.editToggle"
+                  >Anuluj</v-btn
+                >
+                <v-alert
+                  closable
+                  type="error"
+                  v-if="error"
+                  title="Błąd"
+                  :text="error"
+                  @click="handleError"
+                ></v-alert>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
   </v-container>
 </template>
 

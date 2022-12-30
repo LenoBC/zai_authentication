@@ -7,6 +7,8 @@ export default {
   state() {
     return {
       user: null,
+      userList: null,
+      totalPages: null,
     };
   },
   mutations,

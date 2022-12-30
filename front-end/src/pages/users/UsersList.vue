@@ -7,20 +7,21 @@
 
   <div v-if="isAdmin">
     <div class="text-center">
-      <v-pagination class="mt-5" v-model="page" :length="4" rounded="circle"></v-pagination>
-
+      <users-table> </users-table>
     </div>
   </div>
 </template>
 
 <script>
+import UsersTable from "../../components/users/UsersTable.vue";
+
 export default {
   data() {
     return {
       page: 1,
     };
   },
-  components: {},
+  components: { UsersTable },
   computed: {
     isAdmin() {
       return this.$store.getters.role == "ADMIN" ? true : false;

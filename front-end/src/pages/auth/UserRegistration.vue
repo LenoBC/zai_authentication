@@ -124,20 +124,24 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.$refs.form.validate()) {
         const registerData = {
           firstName: this.formData.firstName,
           lastName: this.formData.lastName,
           email: this.formData.email,
           password: this.formData.password,
-          birthday: this.formData.birthday,
+          dateOfBirth: this.formData.birthday,
           phoneNumber: this.formData.phone,
         };
 
-        
-
-        console.log("registerData", registerData);
+        try {
+          await this.$store.dispatch("userRegistration", registerData);
+          const redirectUrl = "/login";
+          this.$router.replace(redirectUrl);
+        } catch (error) {
+          this.error = "Rejestracja nie powiodło się spróbuj ponownie";
+        }
       }
     },
   },

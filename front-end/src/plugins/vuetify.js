@@ -1,7 +1,7 @@
 // Styles
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
-import colors from 'vuetify/lib/util/colors'
+import colors from "vuetify/lib/util/colors";
 
 // Vuetify sth is wrong
 import { createVuetify } from "vuetify";
@@ -9,7 +9,7 @@ import { createVuetify } from "vuetify";
 export default createVuetify({
   theme: {
     dark: true,
-    defaultTheme: 'dark',
+    defaultTheme: "dark",
     themes: {
       light: {
         primary: colors.purple,

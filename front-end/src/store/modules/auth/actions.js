@@ -82,4 +82,23 @@ export default {
     context.dispatch("logout");
     context.commit("setAutoLogout");
   },
+
+  async userRegistration(context, data) {
+    const response = await fetch(context.rootGetters.host + "/auth/registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        responseData.message ||
+          "Nie udało się zarejestrować"
+      );
+      throw error;
+    }
+  },
 };
